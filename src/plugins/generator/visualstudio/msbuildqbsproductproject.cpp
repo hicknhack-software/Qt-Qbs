@@ -170,6 +170,8 @@ void MSBuildQbsProductProject::addConfiguration(const GeneratableProject &projec
                                    QStringLiteral("$(OutDir)$(TargetName)$(TargetExt)"));
     propertyGroup1->appendProperty(QStringLiteral("LocalDebuggerWorkingDirectory"),
                                    QStringLiteral("$(OutDir)"));
+    propertyGroup1->appendProperty(QStringLiteral("AdditionalOptions"),
+                                   QStringLiteral("/std:c++17"));
 
     auto env = buildTask.getRunEnvironment(productData, project.installOptions,
                                            QProcessEnvironment(), QStringList(), nullptr)
