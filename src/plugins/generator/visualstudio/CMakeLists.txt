@@ -1,6 +1,4 @@
 set(SOURCES
-    msbuildfiltersproject.cpp
-    msbuildfiltersproject.h
     msbuildqbsgenerateproject.cpp
     msbuildqbsgenerateproject.h
     msbuildqbsproductproject.cpp
