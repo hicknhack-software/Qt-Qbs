@@ -28,7 +28,6 @@
 **
 ****************************************************************************/
 
-#include "msbuildfiltersproject.h"
 #include "msbuildqbsgenerateproject.h"
 #include "msbuildsharedsolutionpropertiesproject.h"
 #include "msbuildsolutionpropertiesproject.h"
@@ -347,8 +346,6 @@ void VisualStudioGenerator::visitProduct(const GeneratableProject &project,
     addPropertySheets(targetProject);
 
     d->msbuildProjects.insert(projectFilePath, targetProject);
-    d->msbuildProjects.insert(projectFilePath + QStringLiteral(".filters"),
-                          std::make_shared<MSBuildFiltersProject>(productData));
 
     const auto solutionProject = new VisualStudioSolutionFileProject(
                 targetFilePath(productData, project.baseBuildDirectory().absolutePath()),
