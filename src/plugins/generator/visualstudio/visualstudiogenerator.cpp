@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2016 The Qt Company Ltd.
 ** Contact: http://www.qt.io/licensing
@@ -130,12 +130,6 @@ public:
                       const GeneratableProductData &productData) override {
         Q_UNUSED(project);
         Q_UNUSED(projectData);
-        const auto dependencies = productData.dependencies();
-        for (const auto &dep : dependencies) {
-            generator->d->solution->addDependency(
-                        generator->d->solutionProjects.value(productData.name()),
-                        generator->d->solutionProjects.value(dep));
-        }
 
         nestedProjects->appendProperty(
                     generator->d->solutionProjects.value(productData.name())->guid().toString(),
