@@ -169,6 +169,8 @@ QString VisualStudioVersionInfo::toolsVersion() const
 
 QString VisualStudioVersionInfo::platformToolsetVersion() const
 {
+    if (m_version >= Version(15))
+        return QStringLiteral("v141");
     return QStringLiteral("v%1").arg(m_version.majorVersion() * 10);
 }
 
