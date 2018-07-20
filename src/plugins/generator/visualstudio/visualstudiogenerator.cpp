@@ -130,11 +130,6 @@ public:
                       const GeneratableProductData &productData) override {
         Q_UNUSED(project);
         Q_UNUSED(projectData);
-        for (const auto &dep : productData.dependencies()) {
-            generator->d->solution->addDependency(
-                        generator->d->solutionProjects.value(productData.name()),
-                        generator->d->solutionProjects.value(dep));
-        }
 
         nestedProjects->appendProperty(
                     generator->d->solutionProjects.value(productData.name())->guid().toString(),
