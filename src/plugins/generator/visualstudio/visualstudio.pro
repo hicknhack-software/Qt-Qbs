@@ -10,7 +10,6 @@ INCLUDEPATH += ../../../lib/msbuild
 QT = core
 
 HEADERS += \
-    $$PWD/msbuildfiltersproject.h \
     $$PWD/msbuildqbsgenerateproject.h \
     $$PWD/msbuildqbsproductproject.h \
     $$PWD/msbuildsharedsolutionpropertiesproject.h \
@@ -21,7 +20,6 @@ HEADERS += \
     $$PWD/visualstudioguidpool.h
 
 SOURCES += \
-    $$PWD/msbuildfiltersproject.cpp \
     $$PWD/msbuildqbsgenerateproject.cpp \
     $$PWD/msbuildqbsproductproject.cpp \
     $$PWD/msbuildsharedsolutionpropertiesproject.cpp \
