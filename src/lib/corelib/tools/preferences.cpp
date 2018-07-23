@@ -122,7 +122,7 @@ QStringList Preferences::searchPaths(const QString &baseDir) const
  */
 QStringList Preferences::pluginPaths(const QString &baseDir) const
 {
-    return pathList(QStringLiteral("pluginsPath"), baseDir + QStringLiteral("/qbs/plugins"));
+    return pathList(QStringLiteral("pluginsPath"), (baseDir.endsWith(QStringLiteral("/qbs/plugins")) || baseDir.endsWith(QStringLiteral("\\qbs\\plugins"))) ? baseDir : (baseDir + QStringLiteral("/qbs/plugins")));
 }
 
 /*!
