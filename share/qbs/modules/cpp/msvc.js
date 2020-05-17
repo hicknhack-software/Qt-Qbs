@@ -82,6 +82,11 @@ function hasCxx17Option(input)
     return Utilities.versionCompare(input.cpp.compilerVersion, "19.12.25831") >= 0
             || (input.qbs.toolchain.contains("clang-cl") && input.cpp.compilerVersionMajor >= 7);
 }
+function hasCxx20Option(input)
+{
+    return Utilities.versionCompare(input.cpp.compilerVersion, "19.29.30133") >= 0
+            || (input.qbs.toolchain.contains("clang-cl") && input.cpp.compilerVersionMajor >= 13);
+}
 
 function hasZCplusPlusOption(input)
 {
@@ -108,9 +113,11 @@ function supportsExternalIncludesOption(input) {
 
 function addLanguageVersionFlag(input, args) {
     var cxxVersion = Cpp.languageVersion(input.cpp.cxxLanguageVersion,
-                                         ["c++20", "c++17", "c++14", "c++11", "c++98"], "C++");
+                                         ["c++2b", "c++20", "c++2a", "c++17", "c++14", "c++11", "c++98"], "C++");
     if (!cxxVersion)
         return;
+    if (cxxVersion === "c++11" || cxxVersion === "c++98")
+        return; // /std option starts with C++14
 
     // Visual C++ 2013, Update 3
     var hasStdOption = Utilities.versionCompare(input.cpp.compilerVersion, "18.00.30723") >= 0
@@ -124,7 +131,9 @@ function addLanguageVersionFlag(input, args) {
         flag = "/std:c++14";
     else if (cxxVersion === "c++17" && hasCxx17Option(input))
         flag = "/std:c++17";
-    else if (cxxVersion !== "c++11" && cxxVersion !== "c++98")
+    else if ((cxxVersion === "c++20" || cxxVersion === "c++2a") && hasCxx20Option(input))
+        flag = "/std:c++20";
+    else
         flag = "/std:c++latest";
     if (flag)
         args.push(flag);
