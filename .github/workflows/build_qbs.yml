@@ -1,0 +1,128 @@
+name: Build with Qbs
+
+on: [push, pull_request]
+
+jobs:
+  windows-qbs:
+    name: "${{ matrix.config.name }}"
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "Qt 6.5.3 MSVC2022_64"
+            os: windows-2022
+            qt_version: "6.5.3"
+            qt_arch: win64_msvc2019_64
+            qt_modules: qt5compat qttools
+            vcvars: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
+            windeploy_options: --no-system-d3d-compiler --no-opengl-sw
+            pack_name: "Qbs-Qt65-msvc2019_64-${{ github.run_id }}"
+
+          - name: "Qt 6.4.2 MSVC2022_64"
+            os: windows-2022
+            qt_version: "6.4.2"
+            qt_arch: win64_msvc2019_64
+            qt_modules: qt5compat qttools
+            vcvars: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
+            windeploy_options: --no-system-d3d-compiler --no-opengl-sw
+            pack_name: "Qbs-Qt64-msvc2019_64-${{ github.run_id }}"
+
+          - name: "Qt 6.3.2 MSVC2022_64"
+            os: windows-2022
+            qt_version: "6.3.2"
+            qt_arch: win64_msvc2019_64
+            qt_modules: qt5compat qttools
+            vcvars: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat
+            windeploy_options: --no-system-d3d-compiler --no-opengl-sw
+            pack_name: "Qbs-Qt63-msvc2019_64-${{ github.run_id }}"
+
+          - name: "Qt 6.2.4 MSVC2019_64"
+            os: windows-2019
+            qt_version: "6.2.4"
+            qt_arch: win64_msvc2019_64
+            qt_modules: qt5compat qttools
+            vcvars: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat
+            windeploy_options: --no-system-d3d-compiler --no-opengl-sw
+            pack_name: "Qbs-Qt62-win64_msvc2019_64-${{ github.run_id }}"
+
+          - name: "Qt 5.15 MSVC2019_64"
+            os: windows-2019
+            qt_version: "5.15.2"
+            qt_arch: win64_msvc2019_64
+            qt_modules: qtscript qttools
+            vcvars: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat
+            windeploy_options: --no-system-d3d-compiler --no-angle --no-opengl-sw
+            pack_name: "Qbs-win64_msvc2019_64-${{ github.run_id }}"
+
+    steps:
+      - name: Generate Cache Keys
+        run: |
+          echo "${{ matrix.config.qt_arch }}" >> cache-qt.txt
+          echo "${{ matrix.config.qt_modules }}" >> cache-qt.txt
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCache-${{ matrix.config.qt_version }}-${{ hashFiles('cache-qt.txt') }}
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "${{ matrix.config.qt_version }}"
+          arch: "${{ matrix.config.qt_arch }}"
+          modules: ${{ matrix.config.qt_modules }}
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Install Qbs
+        run: choco install qbs
+
+      - name: Setup Qbs
+        run: |
+          qbs setup-toolchains --type msvc $(cmd /c '"${{ matrix.config.vcvars }}" >nul & where cl') msvc
+          qbs setup-qt $(cmd /c where qmake) qt
+          qbs config profiles.qt.baseProfile msvc
+          qbs config defaultProfile qt
+          qbs config --list profiles
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Build
+        run: >-
+          qbs build -d $ENV:TMP\build
+          qbs.installRoot:${{ github.workspace }}/install-root
+          config:Release qbs.defaultBuildVariant:release
+          project.withDocumentation:false
+          project.withTests:false
+
+      - name: Deploy
+        working-directory: ${{ github.workspace }}/install-root/bin
+        run: |
+          windeployqt qbscore.dll --no-compiler-runtime --no-translations
+          windeployqt qbs-config-ui.exe --no-compiler-runtime --no-translations ${{ matrix.config.windeploy_options }}
+          Remove-Item -Recurse -Force -ErrorAction SilentlyContinue iconengines, imageformats
+
+      - name: Pack
+        working-directory: ${{ github.workspace }}/install-root
+        run: 7z a ../${{ matrix.config.pack_name }}.7z * -r
+
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          path: ./${{ matrix.config.pack_name }}.7z
+          name: ${{ matrix.config.pack_name }}.7z
+
+      - name: Upload binaries to release
+        if: contains(github.ref, 'tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          tag: ${{ github.ref }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: Release ${{ github.ref }}
+          # body: ${{ github.event.head_commit.message }}
+          overwrite: true
+          file: ${{ github.workspace }}/${{ matrix.config.pack_name }}.7z
