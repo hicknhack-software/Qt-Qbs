@@ -1,0 +1,80 @@
+name: Build
+
+on: push
+
+jobs:
+  windows-qbs:
+    name: "${{ matrix.config.name }}"
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "Qt 5.15 MSVC2019_64"
+            qt_version: "5.15.2"
+            qt_arch: "win64_msvc2019_64"
+
+    steps:
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: QtCache-${{ matrix.config.qt_version }}-${{ matrix.config.qt_arch }}
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: "${{ matrix.config.qt_version }}"
+          arch: "${{ matrix.config.qt_arch }}"
+          modules: qtscript qttools
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Install Qbs
+        run: choco install qbs
+
+      - name: Setup Qbs
+        run: |
+          qbs setup-toolchains --detect
+          qbs setup-qt $Env:Qt5_DIR\bin\qmake.exe qt5-15
+          qbs config qt5-15.baseProfile MSVC2019-x64
+          qbs config defaultProfile qt5-15
+          qbs config --list profiles
+
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: >-
+          qbs build -d $ENV:TMP\build 
+          qbs.installRoot:${{ github.workspace }}/install-root 
+          config:Release qbs.defaultBuildVariant:release
+          project.withDocumentation:false
+          project.withTests:false
+
+      - name: Deploy
+        working-directory: ${{ github.workspace }}/install-root/bin
+        run: |
+          windeployqt qbscore.dll --no-compiler-runtime --no-translations
+          windeployqt qbs-config-ui.exe --no-compiler-runtime --no-translations --no-system-d3d-compiler --no-angle --no-opengl-sw
+          Remove-Item -Recurse -Force iconengines, imageformats
+
+      - name: Pack
+        working-directory: ${{ github.workspace }}/install-root
+        run: 7z a ../Qbs-${{ matrix.config.qt_arch }}-${{ github.run_id }}.7z * -r
+
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          path: ./Qbs-${{ matrix.config.qt_arch }}-${{ github.run_id }}.7z
+          name: Qbs-${{ matrix.config.qt_arch }}-${{ github.run_id }}.7z
+
+      - name: Upload binaries to release
+        if: contains(github.ref, 'tags/v')
+        uses: svenstaro/upload-release-action@v2
+        with:
+          tag: ${{ github.ref }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: Release ${{ github.ref }}
+          # body: ${{ github.event.head_commit.message }}
+          overwrite: true
+          file: ${{ github.workspace }}/Qbs-${{ matrix.config.qt_arch }}-${{ github.run_id }}.7z
