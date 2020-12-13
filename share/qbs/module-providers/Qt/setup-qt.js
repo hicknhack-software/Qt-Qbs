@@ -720,6 +720,9 @@ function doSetupLibraries(modInfo, qtProps, debugBuild, nonExistingPrlFiles, and
                             libFileName = libFileName.slice(0, -2) + ".dll";
                     }
                 }
+                if (qtProps.mkspecName.contains("msvc") && libFileName.endsWith(".dll")) {
+                    libFileName = libFileName.slice(0, -4) + ".lib";
+                }
                 libFilePath = FileInfo.joinPaths(libDir, libFileName);
                 continue;
             }
