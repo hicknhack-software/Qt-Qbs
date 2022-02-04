@@ -398,9 +398,33 @@ Project {
             required: false
         }
         Depends { name: "Qt.core" }
+        property string qtscriptPath: "../../shared/qtscript/src/"
         Group {
+            name: "api"
+            prefix: qtscriptPath + "script/api/"
             files: [
-                "../../shared/qtscript/src/script/api/*.h"
+                "qscriptable.h",
+                "qscriptable_p.h",
+                "qscriptclass.h",
+                "qscriptclasspropertyiterator.h",
+                "qscriptcontext.cpp",
+                "qscriptcontext.h",
+                "qscriptcontextinfo.h",
+                "qscriptcontext_p.h",
+                "qscriptengineagent.h",
+                "qscriptengineagent_p.h",
+                "qscriptengine.h",
+                "qscriptengine_p.h",
+                "qscriptextensioninterface.h",
+                "qscriptextensionplugin.h",
+                "qscriptprogram.h",
+                "qscriptprogram_p.h",
+                "qscriptstring.h",
+                "qscriptstring_p.h",
+                "qscriptvalue.h",
+                "qscriptvalueiterator.h",
+                "qscriptvalue_p.h",
+                "qtscriptglobal.h",
             ]
             fileTags: ["qtscriptheader"]
         }
@@ -412,10 +436,27 @@ Project {
         Rule {
             multiplex: true
             inputs: ["qtscriptheader"]
-            Artifact {
-                filePath: "include/QtScript/qscriptengine.h"
-                fileTags: ["hpp"]
+            outputArtifacts: {
+                var artifacts = [];
+                function makeArtifact(input) {
+                    if (input.baseName.endsWith('_p')) {
+                        artifacts.push({
+                                    filePath: FileInfo.joinPaths("include", "QtScript", product.Qt.core.version, "QtScript", "private", input.fileName),
+                                    fileTags: ["hpp"],
+                                });
+                    }
+                    else {
+                        artifacts.push({
+                                    filePath: FileInfo.joinPaths("include", "QtScript", input.fileName),
+                                    fileTags: ["hpp"],
+                                });
+                    }
+                }
+                inputs["qtscriptheader"].forEach(makeArtifact);
+                return artifacts;
             }
+            outputFileTags: ["hpp"]
+
             prepare: {
                 var syncQtPath;
                 if (Utilities.versionCompare(product.Qt.core.version, "6.1") >= 0) {
@@ -438,14 +479,16 @@ Project {
                 var qtScriptSrcPath = FileInfo.cleanPath(
                             FileInfo.path(inputs["qtscriptheader"][0].filePath) + "/../../..");
                 console.info("qtScriptSrcPath: " + qtScriptSrcPath);
-                var cmd = new Command(product.perlPath, [
-                                          syncQtPath,
-                                          "-minimal",
-                                          "-version", product.Qt.core.version,
-                                          "-outdir", FileInfo.cleanPath(
-                                              FileInfo.path(output.filePath) + "/../.."),
-                                          qtScriptSrcPath
-                                      ]);
+                var args = [
+                    syncQtPath,
+                    "-minimal",
+                    "-version", product.Qt.core.version,
+                    "-outdir", FileInfo.joinPaths(product.buildDirectory),
+                    qtScriptSrcPath
+                ];
+                var p2 = new Process();
+                p2.exec(product.perlPath, args); // HACK: run this directly (no way to express dependencies correctly here)
+                var cmd = new Command(product.perlPath, args);
                 cmd.description = "Create forwarding headers for the bundled QtScript module.";
                 return cmd;
             }
