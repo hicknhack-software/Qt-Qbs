@@ -75,4 +75,8 @@ Module {
             return flags;
         }
     }
+    Properties {
+        condition: qbs.toolchain.contains("msvc")
+        cpp.cxxFlags: ["/permissive-"]
+    }
 }
