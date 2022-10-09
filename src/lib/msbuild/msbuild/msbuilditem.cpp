@@ -91,3 +91,5 @@ void MSBuildItem::accept(IMSBuildNodeVisitor *visitor) const
 }
 
 } // namespace qbs
+
+#include "moc_msbuilditem.cpp"

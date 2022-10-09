@@ -79,3 +79,5 @@ void MSBuildPropertyBase::setValue(const QVariant &value)
 }
 
 } // namespace qbs
+
+#include "moc_msbuildpropertybase.cpp"
