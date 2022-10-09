@@ -40,3 +40,5 @@ MSBuildClCompile::MSBuildClCompile(IMSBuildItemGroup *parent)
 }
 
 } // namespace qbs
+
+#include "moc_msbuildclcompile.cpp"
