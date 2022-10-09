@@ -74,3 +74,5 @@ void VisualStudioSolutionFileProject::setFilePath(const QString &filePath)
 }
 
 } // namespace qbs
+
+#include "moc_visualstudiosolutionfileproject.cpp"

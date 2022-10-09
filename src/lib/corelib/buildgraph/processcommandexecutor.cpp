@@ -422,3 +422,5 @@ ProcessCommand *ProcessCommandExecutor::processCommand() const
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_processcommandexecutor.cpp"

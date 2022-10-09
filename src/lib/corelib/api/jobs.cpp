@@ -373,3 +373,5 @@ void InstallJob::install(const TopLevelProjectPtr &project,
 }
 
 } // namespace qbs
+
+#include "moc_jobs.cpp"
