@@ -76,3 +76,5 @@ void Application::userInterrupt()
 }
 
 } // namespace qbs
+
+#include "moc_application.cpp"
