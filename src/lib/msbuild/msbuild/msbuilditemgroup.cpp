@@ -74,3 +74,5 @@ void MSBuildItemGroup::accept(IMSBuildNodeVisitor *visitor) const
 }
 
 } // namespace qbs
+
+#include "moc_msbuilditemgroup.cpp"

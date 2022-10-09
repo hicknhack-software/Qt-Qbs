@@ -134,3 +134,5 @@ void MSBuildTargetProject::appendPropertySheet(const QString &path, bool optiona
 }
 
 } // namespace qbs
+
+#include "moc_msbuildtargetproject.cpp"
