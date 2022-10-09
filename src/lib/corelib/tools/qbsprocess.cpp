@@ -183,3 +183,5 @@ void QbsProcess::handleFinishedPacket(const QByteArray &packetData)
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_qbsprocess.cpp"

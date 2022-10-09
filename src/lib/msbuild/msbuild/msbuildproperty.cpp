@@ -55,3 +55,5 @@ void MSBuildProperty::accept(IMSBuildNodeVisitor *visitor) const
 }
 
 } // namespace qbs
+
+#include "moc_msbuildproperty.cpp"
