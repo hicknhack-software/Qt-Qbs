@@ -63,3 +63,5 @@ IMSBuildItemGroup::IMSBuildItemGroup(MSBuildProject *parent)
 }
 
 } // namespace qbs
+
+#include "moc_imsbuildgroup.cpp"

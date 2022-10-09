@@ -146,3 +146,5 @@ void LauncherSocket::handleRequests()
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_launchersocket.cpp"
