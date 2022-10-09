@@ -69,3 +69,5 @@ void IVisualStudioSolutionProject::setName(const QString &name)
 }
 
 } // namespace qbs
+
+#include "moc_ivisualstudiosolutionproject.cpp"

@@ -95,3 +95,5 @@ void MSBuildProject::accept(IMSBuildNodeVisitor *visitor) const
 }
 
 } // namespace qbs
+
+#include "moc_msbuildproject.cpp"
