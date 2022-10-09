@@ -246,3 +246,5 @@ const Internal::Logger &ProjectGenerator::logger() const
 }
 
 } // namespace qbs
+
+#include "moc_generator.cpp"
