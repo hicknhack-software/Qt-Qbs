@@ -84,3 +84,5 @@ void VisualStudioSolutionGlobalSection::appendProperty(const QString &key, const
 }
 
 } // namespace qbs
+
+#include "moc_visualstudiosolutionglobalsection.cpp"

@@ -444,3 +444,5 @@ void MSBuildQbsProductProject::addQbsFile(const GeneratableProject &project,
 
 
 } // namespace qbs
+
+#include "moc_msbuildqbsproductproject.cpp"
