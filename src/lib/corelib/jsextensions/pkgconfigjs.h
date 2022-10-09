@@ -36,6 +36,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#pragma once
 
 #include "tools/qbs_export.h"
 #include <tools/stlutils.h>

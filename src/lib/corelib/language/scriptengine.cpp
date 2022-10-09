@@ -828,3 +828,5 @@ ScriptEngine::PropertyCacheKey::PropertyCacheKey(QString moduleName,
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_scriptengine.cpp"

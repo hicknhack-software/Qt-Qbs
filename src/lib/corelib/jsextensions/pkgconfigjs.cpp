@@ -262,3 +262,5 @@ void initializeJsExtensionPkgConfig(QScriptValue extensionObject)
 }
 
 Q_DECLARE_METATYPE(qbs::Internal::PkgConfigJs *)
+
+#include "moc_pkgconfigjs.cpp"
