@@ -90,3 +90,5 @@ void SessionPacketReader::start()
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_sessionpacketreader.cpp"
