@@ -115,3 +115,5 @@ void MSBuildFilter::setSourceControlFiles(bool sourceControlFiles)
 }
 
 } // namespace qbs
+
+#include "moc_msbuildfilter.cpp"

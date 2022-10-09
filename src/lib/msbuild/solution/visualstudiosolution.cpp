@@ -115,3 +115,5 @@ void VisualStudioSolution::appendGlobalSection(VisualStudioSolutionGlobalSection
 }
 
 } // namespace qbs
+
+#include "moc_visualstudiosolution.cpp"
