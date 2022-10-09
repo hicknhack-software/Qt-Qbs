@@ -38,3 +38,5 @@ MSBuildNone::MSBuildNone(IMSBuildItemGroup *parent)
 }
 
 } // namespace qbs
+
+#include "moc_msbuildnone.cpp"

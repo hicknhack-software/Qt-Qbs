@@ -178,3 +178,5 @@ void ExecutorJob::reset()
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_executorjob.cpp"
