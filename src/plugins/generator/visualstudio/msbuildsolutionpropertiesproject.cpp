@@ -67,3 +67,5 @@ MSBuildSolutionPropertiesProject::MSBuildSolutionPropertiesProject(
 }
 
 } // namespace qbs
+
+#include "moc_msbuildsolutionpropertiesproject.cpp"

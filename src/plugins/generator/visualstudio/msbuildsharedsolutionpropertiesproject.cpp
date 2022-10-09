@@ -149,3 +149,5 @@ MSBuildSharedSolutionPropertiesProject::MSBuildSharedSolutionPropertiesProject(
 }
 
 } // namespace qbs
+
+#include "moc_msbuildsharedsolutionpropertiesproject.cpp"
