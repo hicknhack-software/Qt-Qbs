@@ -42,3 +42,5 @@ MSBuildLink::MSBuildLink(IMSBuildItemGroup *parent)
 }
 
 } // namespace qbs
+
+#include "moc_msbuildlink.cpp"
