@@ -396,3 +396,5 @@ Node *SettingsModel::SettingsModelPrivate::indexToNode(const QModelIndex &index)
 
 
 } // namespace qbs
+
+#include "moc_settingsmodel.cpp"

@@ -55,3 +55,5 @@ void MSBuildItemMetadata::accept(IMSBuildNodeVisitor *visitor) const
 }
 
 } // namespace qbs
+
+#include "moc_msbuilditemmetadata.cpp"

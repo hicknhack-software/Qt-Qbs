@@ -1329,3 +1329,5 @@ void Executor::setState(ExecutorState s)
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_executor.cpp"
