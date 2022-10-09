@@ -69,3 +69,5 @@ MSBuildQbsGenerateProject::MSBuildQbsGenerateProject(
 }
 
 } // namespace qbs
+
+#include "moc_msbuildqbsgenerateproject.cpp"
