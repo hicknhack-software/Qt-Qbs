@@ -293,3 +293,5 @@ Process *LauncherSocketHandler::senderProcess() const
 } // namespace qbs
 
 #include <launchersockethandler.moc>
+
+#include "moc_launchersockethandler.cpp"
