@@ -698,3 +698,5 @@ void CommandLineFrontend::install()
 }
 
 } // namespace qbs
+
+#include "moc_commandlinefrontend.cpp"
