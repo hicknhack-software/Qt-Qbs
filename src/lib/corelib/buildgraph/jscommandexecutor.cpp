@@ -290,3 +290,5 @@ const JavaScriptCommand *JsCommandExecutor::jsCommand() const
 } // namespace qbs
 
 #include "jscommandexecutor.moc"
+
+#include "moc_jscommandexecutor.cpp"
