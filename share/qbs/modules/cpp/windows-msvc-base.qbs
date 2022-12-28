@@ -130,7 +130,7 @@ CppModule {
         inputs: ["c_pch_src"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.precompiledHeaderOutputTags("c", true)
+        outputFileTags: Cpp.precompiledHeaderOutputTags("c", true, product)
         outputArtifacts: Cpp.precompiledHeaderOutputArtifacts(input, product, "c", true)
         prepare: MSVC.prepareCompiler.apply(MSVC, arguments)
     }
@@ -141,7 +141,7 @@ CppModule {
         explicitlyDependsOn: ["c_pch"]  // to prevent vc--0.pdb conflict
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.precompiledHeaderOutputTags("cpp", true)
+        outputFileTags: Cpp.precompiledHeaderOutputTags("cpp", true, product)
         outputArtifacts: Cpp.precompiledHeaderOutputArtifacts(input, product, "cpp", true)
         prepare: MSVC.prepareCompiler.apply(MSVC, arguments)
     }
@@ -152,7 +152,7 @@ CppModule {
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
         explicitlyDependsOn: ["c_pch", "cpp_pch"]
-        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles, /*withCxxModules*/ true)
+        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles, /*withCxxModules*/ true).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.compilerOutputArtifacts(input, undefined, /*withCxxModules*/ true)
         prepare: MSVC.prepareCompiler.apply(MSVC, arguments)
     }
@@ -171,7 +171,7 @@ CppModule {
         name: "applicationLinker"
         multiplex: true
         inputs: ['obj', 'res', 'native.pe.manifest', 'def']
-        inputsFromDependencies: ['staticlibrary', 'dynamiclibrary_import', "debuginfo_app"]
+        inputsFromDependencies: ['staticlibrary', 'dynamiclibrary_import', "debuginfo_app"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: {
             var tags = ["application", "debuginfo_app"];
             if (generateLinkerMapFile)
@@ -188,7 +188,7 @@ CppModule {
         name: "dynamicLibraryLinker"
         multiplex: true
         inputs: ['obj', 'res', 'native.pe.manifest', 'def']
-        inputsFromDependencies: ['staticlibrary', 'dynamiclibrary_import', "debuginfo_dll"]
+        inputsFromDependencies: ['staticlibrary', 'dynamiclibrary_import', "debuginfo_dll"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: {
             var tags = ["dynamiclibrary", "dynamiclibrary_import", "debuginfo_dll"];
             if (shouldSignArtifacts)
@@ -203,7 +203,7 @@ CppModule {
         name: "libtool"
         multiplex: true
         inputs: ["obj", "res"]
-        inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: ["staticlibrary", "debuginfo_cl"]
         outputArtifacts: MSVC.libtoolOutputArtifacts(product)
         prepare: MSVC.libtoolCommands.apply(MSVC, arguments)
@@ -235,7 +235,7 @@ CppModule {
 
     Rule {
         inputs: ["asm"]
-        outputFileTags: Cpp.assemblerOutputTags(false)
+        outputFileTags: Cpp.assemblerOutputTags(false).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.assemblerOutputArtifacts(input)
         prepare: MSVC.assemblerCommands.apply(MSVC, arguments)
     }

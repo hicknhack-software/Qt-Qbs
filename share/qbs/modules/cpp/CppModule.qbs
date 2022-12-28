@@ -432,6 +432,9 @@ Module {
 
     property bool importPrivateLibraries: true
 
+    property stringList extraObjTags: product.type.includes("obj.exported") ? ["obj.exported"] : []
+    property stringList extraLinkInputsFromDependencies: ["obj.exported"]
+    
     Group {
         name: "std modules"
         condition: stdModulesFiles !== undefined
