@@ -137,6 +137,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "linkerscript"]
         inputsFromDependencies: ["staticlibrary"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
         prepare: IAR.prepareLinker.apply(IAR, arguments)
@@ -147,6 +148,7 @@ CppModule {
         multiplex: true
         inputs: ["obj"]
         inputsFromDependencies: ["staticlibrary"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: IAR.prepareArchiver.apply(IAR, arguments)
