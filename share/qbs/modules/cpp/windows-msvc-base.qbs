@@ -167,6 +167,7 @@ CppModule {
         multiplex: true
         inputs: ['obj', 'res', 'native.pe.manifest', 'def']
         inputsFromDependencies: ['staticlibrary', 'dynamiclibrary_import', "debuginfo_app"]
+        explicitlyDependsOnFromDependencies: ['obj']
 
         outputFileTags: {
             var tags = ["application", "debuginfo_app"];
@@ -211,6 +212,7 @@ CppModule {
         multiplex: true
         inputs: ['obj', 'res', 'native.pe.manifest', 'def']
         inputsFromDependencies: ['staticlibrary', 'dynamiclibrary_import', "debuginfo_dll"]
+        explicitlyDependsOnFromDependencies: ['obj']
 
         outputFileTags: {
             var tags = ["dynamiclibrary", "dynamiclibrary_import", "debuginfo_dll"];
@@ -252,6 +254,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "res"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ['obj']
         outputFileTags: ["staticlibrary", "debuginfo_cl"]
         outputArtifacts: {
             var artifacts = [

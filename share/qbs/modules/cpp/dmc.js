@@ -325,7 +325,7 @@ function assemblerFlags(project, product, input, outputs, explicitlyDependsOn) {
     return args;
 }
 
-function linkerFlags(project, product, inputs, outputs) {
+function linkerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     var useCompilerDriver = useCompilerDriverLinker(product);
@@ -336,6 +336,9 @@ function linkerFlags(project, product, inputs, outputs) {
 
         // Input objects.
         args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+            return FileInfo.toWindowsSeparators(path);
+        }));
+        args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn).map(function(path) {
             return FileInfo.toWindowsSeparators(path);
         }));
 
@@ -377,12 +380,15 @@ function linkerFlags(project, product, inputs, outputs) {
     return args;
 }
 
-function archiverFlags(project, product, inputs, outputs) {
+function archiverFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = ["-c"];
     // Output.
     args.push(FileInfo.toWindowsSeparators(outputs.staticlibrary[0].filePath));
     // Input objects.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+        return FileInfo.toWindowsSeparators(path);
+    }));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn).map(function(path) {
         return FileInfo.toWindowsSeparators(path);
     }));
     return args;
@@ -464,11 +470,11 @@ function prepareAssembler(project, product, inputs, outputs, input, output, expl
     return [cmd];
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var cmds = [];
     var primaryOutput = outputs.dynamiclibrary ? outputs.dynamiclibrary[0]
                                                : outputs.application[0];
-    var args = linkerFlags(project, product, inputs, outputs);
+    var args = linkerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var linkerPath = effectiveLinkerPath(product);
     var cmd = new Command(linkerPath, args);
     cmd.workingDirectory = product.buildDirectory;
@@ -485,8 +491,8 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     return cmds;
 }
 
-function prepareArchiver(project, product, inputs, outputs, input, output) {
-    var args = archiverFlags(project, product, inputs, outputs);
+function prepareArchiver(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
+    var args = archiverFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var cmd = new Command(product.cpp.archiverPath, args);
     cmd.workingDirectory = product.buildDirectory;
     cmd.description = "creating " + output.fileName;

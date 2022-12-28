@@ -415,7 +415,7 @@ function resourceCompilerFlags(project, product, input, outputs) {
     return args;
 }
 
-function linkerFlags(project, product, inputs, outputs) {
+function linkerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
     var useCompilerDriver = useCompilerDriverLinker(product);
     if (useCompilerDriver) {
@@ -453,6 +453,9 @@ function linkerFlags(project, product, inputs, outputs) {
         args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
             return FileInfo.toNativeSeparators(path);
         }));
+        args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn).map(function(path) {
+            return FileInfo.toNativeSeparators(path);
+        }));
 
         var libraryDependencies = Cpp.collectLibraryDependencies(product);
         for (var i = 0; i < libraryDependencies.length; ++i) {
@@ -475,9 +478,12 @@ function linkerFlags(project, product, inputs, outputs) {
     return args;
 }
 
-function libraryManagerFlags(project, product, inputs, outputs) {
+function libraryManagerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = ["-b", "-n", "-q"];
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+        return "+" + FileInfo.toNativeSeparators(path);
+    }));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn).map(function(path) {
         return "+" + FileInfo.toNativeSeparators(path);
     }));
     args.push("-o", FileInfo.toNativeSeparators(outputs.staticlibrary[0].filePath));
@@ -544,10 +550,10 @@ function prepareResourceCompiler(project, product, inputs, outputs, input, outpu
     return [cmd];
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var primaryOutput = outputs.dynamiclibrary ? outputs.dynamiclibrary[0]
                                                : outputs.application[0];
-    var args = linkerFlags(project, product, inputs, outputs);
+    var args = linkerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var linkerPath = effectiveLinkerPath(product);
     var cmd = new Command(linkerPath, args);
     cmd.workingDirectory = product.buildDirectory;
@@ -557,8 +563,8 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     return [cmd];
 }
 
-function prepareLibraryManager(project, product, inputs, outputs, input, output) {
-    var args = libraryManagerFlags(project, product, inputs, outputs);
+function prepareLibraryManager(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
+    var args = libraryManagerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var cmd = new Command(product.cpp.libraryManagerPath, args);
     cmd.workingDirectory = product.buildDirectory;
     cmd.description = "linking " + outputs.staticlibrary[0].fileName;
