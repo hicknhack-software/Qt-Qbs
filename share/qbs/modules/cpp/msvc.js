@@ -387,7 +387,7 @@ function handleDiscardProperty(product, flags) {
         flags.push("/OPT:NOREF");
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var i;
     var linkDLL = (outputs.dynamiclibrary ? true : false)
     var primaryOutput = (linkDLL ? outputs.dynamiclibrary[0] : outputs.application[0])
@@ -418,6 +418,7 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     }
 
     var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs),
+                              Cpp.collectLinkerObjectPaths(explicitlyDependsOn),
                               Cpp.collectResourceObjectPaths(inputs));
     args = args.concat([].uniqueConcat(allInputs).map(function(path) {
         return FileInfo.toWindowsSeparators(path);
