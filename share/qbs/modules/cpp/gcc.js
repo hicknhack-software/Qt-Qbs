@@ -467,7 +467,7 @@ function linkerFlags(project, product, inputs, outputs, primaryOutput, linkerPat
     // sending the rest of the arguments through the response file.
     args.push("-o", primaryOutput.filePath);
 
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
     args = args.concat(Cpp.collectResourceObjectPaths(inputs));
 
     var wholeArchiveActive = false;

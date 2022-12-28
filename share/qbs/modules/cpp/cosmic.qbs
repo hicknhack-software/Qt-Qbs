@@ -110,7 +110,7 @@ CppModule {
     Rule {
         id: assembler
         inputs: ["asm"]
-        outputFileTags: Cpp.assemblerOutputTags(generateAssemblerListingFiles)
+        outputFileTags: Cpp.assemblerOutputTags(generateAssemblerListingFiles).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.assemblerOutputArtifacts(input)
         prepare: COSMIC.prepareAssembler.apply(COSMIC, arguments)
     }
@@ -125,7 +125,7 @@ CppModule {
         inputs: ["cpp", "c"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles)
+        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.compilerOutputArtifacts(input)
         prepare: COSMIC.prepareCompiler.apply(COSMIC, arguments)
     }
@@ -134,7 +134,7 @@ CppModule {
         id: applicationLinker
         multiplex: true
         inputs: ["obj", "linkerscript"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
         prepare: COSMIC.prepareLinker.apply(COSMIC, arguments)
@@ -144,7 +144,7 @@ CppModule {
         id: staticLibraryLinker
         multiplex: true
         inputs: ["obj"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: COSMIC.prepareArchiver.apply(COSMIC, arguments)

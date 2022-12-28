@@ -335,7 +335,7 @@ function linkerFlags(project, product, inputs, outputs) {
                                        product.type));
 
         // Input objects.
-        args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+        args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies).map(function(path) {
             return FileInfo.toWindowsSeparators(path);
         }));
 
@@ -383,7 +383,7 @@ function archiverFlags(project, product, inputs, outputs) {
     // Output.
     args.push(FileInfo.toWindowsSeparators(outputs.staticlibrary[0].filePath));
     // Input objects.
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies).map(function(path) {
         return FileInfo.toWindowsSeparators(path);
     }));
     return args;

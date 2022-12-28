@@ -128,7 +128,7 @@ CppModule {
         id: assembler
         inputs: ["asm"]
         outputFileTags: DMC.depsOutputTags().concat(
-                            Cpp.assemblerOutputTags(generateAssemblerListingFiles))
+                            Cpp.assemblerOutputTags(generateAssemblerListingFiles)).concat(product.cpp.extraObjTags)
         outputArtifacts: DMC.depsOutputArtifacts(input, product).concat(
                              Cpp.assemblerOutputArtifacts(input))
         prepare: DMC.prepareAssembler.apply(DMC, arguments)
@@ -145,7 +145,7 @@ CppModule {
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
         outputFileTags: DMC.depsOutputTags().concat(
-                            Cpp.compilerOutputTags(generateCompilerListingFiles))
+                            Cpp.compilerOutputTags(generateCompilerListingFiles)).concat(product.cpp.extraObjTags)
         outputArtifacts: DMC.depsOutputArtifacts(input, product).concat(
                              Cpp.compilerOutputArtifacts(input))
         prepare: DMC.prepareCompiler.apply(DMC, arguments)
@@ -171,7 +171,7 @@ CppModule {
         id: applicationLinker
         multiplex: true
         inputs: ["obj", "res", "linkerscript"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
         prepare: DMC.prepareLinker.apply(DMC, arguments)
@@ -181,7 +181,7 @@ CppModule {
         id: dynamicLibraryLinker
         multiplex: true
         inputs: ["obj", "res"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.dynamicLibraryLinkerOutputTags()
         outputArtifacts: Cpp.dynamicLibraryLinkerOutputArtifacts(product)
         prepare: DMC.prepareLinker.apply(DMC, arguments)
@@ -191,7 +191,7 @@ CppModule {
         id: staticLibraryLinker
         multiplex: true
         inputs: ["obj"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: DMC.prepareArchiver.apply(DMC, arguments)
