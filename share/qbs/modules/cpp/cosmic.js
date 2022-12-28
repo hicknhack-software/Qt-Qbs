@@ -305,7 +305,7 @@ function linkerFlags(project, product, inputs, outputs) {
     args = args.concat(Cpp.collectLinkerScriptPathsArguments(product, inputs));
 
     // Input objects.
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
 
     // Library dependencies (order has matters).
     args = args.concat(Cpp.collectLibraryDependencies(product).map(function(dep) {
@@ -325,7 +325,7 @@ function archiverFlags(project, product, inputs, outputs) {
     args.push(outputs.staticlibrary[0].filePath);
 
     // Input objects.
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
     return args;
 }
 

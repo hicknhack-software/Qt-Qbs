@@ -427,6 +427,9 @@ Module {
 
     property bool importPrivateLibraries: true
 
+    property stringList extraObjTags: product.type.includes("obj.exported") ? ["obj.exported"] : []
+    property stringList extraLinkInputsFromDependencies: ["obj.exported"]
+
     // TODO: The following four rules could use a convenience base item if rule properties
     //       were available in Artifact items and prepare scripts.
     Rule {

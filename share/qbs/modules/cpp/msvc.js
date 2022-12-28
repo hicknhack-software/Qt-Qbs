@@ -429,7 +429,7 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
                            Cpp.collectMiscLinkerArguments(product));
     }
 
-    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs),
+    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies),
                               Cpp.collectResourceObjectPaths(inputs));
     args = args.concat([].uniqueConcat(allInputs).map(function(path) {
         return FileInfo.toWindowsSeparators(path);
@@ -738,8 +738,9 @@ function libtoolCommands(project, product, inputs, outputs, input, output, expli
     var lib = outputs["staticlibrary"][0];
     var nativeOutputFileName = FileInfo.toWindowsSeparators(lib.filePath)
     args.push('/OUT:' + nativeOutputFileName)
-    for (var i in inputs.obj) {
-        var fileName = FileInfo.toWindowsSeparators(inputs.obj[i].filePath)
+    var objPaths = Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies);
+    for (var i in objPaths) {
+        var fileName = FileInfo.toWindowsSeparators(objPaths[i])
         args.push(fileName)
     }
     for (var i in inputs.res) {
