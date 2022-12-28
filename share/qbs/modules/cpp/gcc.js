@@ -261,7 +261,7 @@ function escapeLinkerFlags(product, inputs, linkerFlags) {
     return linkerFlags;
 }
 
-function linkerFlags(project, product, inputs, outputs, primaryOutput, linkerPath) {
+function linkerFlags(project, product, inputs, explicitlyDependsOn, outputs, primaryOutput, linkerPath) {
     var isDarwin = product.qbs.targetOS.includes("darwin");
     var libraryDependencies = collectLibraryDependencies(product, isDarwin);
     var frameworks = product.cpp.frameworks;
@@ -430,6 +430,7 @@ function linkerFlags(project, product, inputs, outputs, primaryOutput, linkerPat
     args.push("-o", primaryOutput.filePath);
 
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
     args = args.concat(Cpp.collectResourceObjectPaths(inputs));
 
     for (i in frameworks) {
@@ -1315,7 +1316,7 @@ function separateDebugInfoCommandsDarwin(product, outputs, primaryOutputs) {
     return commands;
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var i, primaryOutput, cmd, commands = [];
 
     if (outputs.application) {
@@ -1328,7 +1329,7 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
 
     var linkerPath = effectiveLinkerPath(product, inputs)
 
-    var args = linkerFlags(project, product, inputs, outputs, primaryOutput, linkerPath);
+    var args = linkerFlags(project, product, inputs, explicitlyDependsOn, outputs, primaryOutput, linkerPath);
     var wrapperArgsLength = 0;
     var wrapperArgs = product.cpp.linkerWrapper;
     if (wrapperArgs && wrapperArgs.length > 0) {
