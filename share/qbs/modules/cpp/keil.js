@@ -785,7 +785,7 @@ function linkerFlags(project, product, inputs, outputs) {
         // a libraries, it interpret all this stuff as an input objects,
         // so, we need to pass it together in one string.
         function collectAllObjectPathsArguments(product, inputs) {
-            return [].concat(Cpp.collectLinkerObjectPaths(inputs),
+            return [].concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies),
                              collectLibraryObjectPaths(product));
         }
 
@@ -805,7 +805,7 @@ function linkerFlags(project, product, inputs, outputs) {
             args.push("PRINT(" + FileInfo.toWindowsSeparators(outputs.mem_map[0].filePath) + ")");
     } else if (isArmArchitecture(architecture)) {
         // Inputs.
-        args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+        args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
 
         // Output.
         args.push("--output", outputs.application[0].filePath);
@@ -845,7 +845,7 @@ function archiverFlags(project, product, inputs, outputs) {
     var args = [];
 
     // Inputs.
-    var objectPaths = Cpp.collectLinkerObjectPaths(inputs);
+    var objectPaths = Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies);
 
     var architecture = product.qbs.architecture;
     if (isMcsArchitecture(architecture) || isC166Architecture(architecture)) {
@@ -883,7 +883,7 @@ function archiverFlags(project, product, inputs, outputs) {
 // * https://www.keil.com/support/docs/4152.htm
 // So, we generate the listing files from the object files
 // using the disassembler.
-function generateClangCompilerListing(project, product, inputs, outputs, input, output) {
+function generateClangCompilerListing(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     if (isArmClangCompiler(input.cpp.compilerPath) && input.cpp.generateCompilerListingFiles) {
         var args = disassemblerFlags(project, product, input, outputs, explicitlyDependsOn);
         var disassemblerPath = input.cpp.disassemblerPath;
