@@ -409,6 +409,7 @@ CppModule {
             return tags;
         }
         inputsFromDependencies: ["dynamiclibrary_symbols", "staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
 
         outputFileTags: {
             var tags = ["bundle.input", "dynamiclibrary", "dynamiclibrary_symlink",
@@ -462,6 +463,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "res", "linkerscript"]
         inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import", "staticlibrary"]
+        explicitlyDependsOnFromDependencies: ["obj"]
 
         outputFileTags: ["bundle.input", "staticlibrary", "c_staticlibrary", "cpp_staticlibrary"]
         outputArtifacts: {
@@ -490,6 +492,8 @@ CppModule {
             var args = ['rcs', output.filePath];
             for (var i in inputs.obj)
                 args.push(inputs.obj[i].filePath);
+            for (var i in explicitlyDependsOn.obj)
+                args.push(explicitlyDependsOn.obj[i].filePath);
             for (var i in inputs.res)
                 args.push(inputs.res[i].filePath);
             var cmd = new Command(product.cpp.archiverPath, args);
@@ -514,6 +518,7 @@ CppModule {
             return tags;
         }
         inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import", "staticlibrary"]
+        explicitlyDependsOnFromDependencies: ["obj"]
 
         outputFileTags: {
             var tags = ["bundle.input", "loadablemodule", "debuginfo_loadablemodule",
@@ -557,6 +562,7 @@ CppModule {
             return tags;
         }
         inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import", "staticlibrary"]
+        explicitlyDependsOnFromDependencies: ["obj"]
 
         outputFileTags: {
             var tags = ["bundle.input", "application", "debuginfo_app", "debuginfo_bundle",

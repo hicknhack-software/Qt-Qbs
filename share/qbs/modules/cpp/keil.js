@@ -755,7 +755,7 @@ function disassemblerFlags(project, product, input, outputs, explicitlyDependsOn
     return args;
 }
 
-function linkerFlags(project, product, inputs, outputs) {
+function linkerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     var libraryPaths = Cpp.collectLibraryPaths(product);
@@ -786,6 +786,7 @@ function linkerFlags(project, product, inputs, outputs) {
         // so, we need to pass it together in one string.
         function collectAllObjectPathsArguments(product, inputs) {
             return [].concat(Cpp.collectLinkerObjectPaths(inputs),
+                             Cpp.collectLinkerObjectPaths(explicitlyDependsOn),
                              collectLibraryObjectPaths(product));
         }
 
@@ -841,11 +842,12 @@ function linkerFlags(project, product, inputs, outputs) {
     return args;
 }
 
-function archiverFlags(project, product, inputs, outputs) {
+function archiverFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     // Inputs.
-    var objectPaths = Cpp.collectLinkerObjectPaths(inputs);
+    var objectPaths = [].concat(Cpp.collectLinkerObjectPaths(inputs),
+                                Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
 
     var architecture = product.qbs.architecture;
     if (isMcsArchitecture(architecture) || isC166Architecture(architecture)) {
@@ -956,9 +958,9 @@ function prepareAssembler(project, product, inputs, outputs, input, output, expl
     return [cmd];
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var primaryOutput = outputs.application[0];
-    var args = linkerFlags(project, product, inputs, outputs);
+    var args = linkerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var linkerPath = product.cpp.linkerPath;
     var architecture = product.cpp.architecture;
     var cmd = new Command(linkerPath, args);
@@ -975,8 +977,8 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     return [cmd];
 }
 
-function prepareArchiver(project, product, inputs, outputs, input, output) {
-    var args = archiverFlags(project, product, inputs, outputs);
+function prepareArchiver(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
+    var args = archiverFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var archiverPath = product.cpp.archiverPath;
     var architecture = product.cpp.architecture;
     var cmd = new Command(archiverPath, args);
