@@ -113,7 +113,7 @@ CppModule {
         id: assembler
         inputs: ["asm"]
         outputFileTags: SDCC.extraCompilerOutputTags().concat(
-                            Cpp.assemblerOutputTags(generateAssemblerListingFiles))
+                            Cpp.assemblerOutputTags(generateAssemblerListingFiles)).concat(product.cpp.extraObjTags)
         outputArtifacts: SDCC.extraCompilerOutputArtifacts(input).concat(
                              Cpp.assemblerOutputArtifacts(input))
         prepare: SDCC.prepareAssembler.apply(SDCC, arguments)
@@ -130,7 +130,7 @@ CppModule {
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
         outputFileTags: SDCC.extraCompilerOutputTags().concat(
-                            Cpp.compilerOutputTags(generateCompilerListingFiles))
+                            Cpp.compilerOutputTags(generateCompilerListingFiles)).concat(product.cpp.extraObjTags)
         outputArtifacts: SDCC.extraCompilerOutputArtifacts(input).concat(
                              Cpp.compilerOutputArtifacts(input))
         prepare: SDCC.prepareCompiler.apply(SDCC, arguments)
@@ -140,7 +140,7 @@ CppModule {
         id: applicationLinker
         multiplex: true
         inputs: ["obj", "linkerscript"]
-        inputsFromDependencies: ["staticlibrary"]
+        inputsFromDependencies: ["staticlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: SDCC.extraApplicationLinkerOutputTags().concat(
                             Cpp.applicationLinkerOutputTags(generateLinkerMapFile))
         outputArtifacts: SDCC.extraApplicationLinkerOutputArtifacts(product).concat(
@@ -152,7 +152,7 @@ CppModule {
         id: staticLibraryLinker
         multiplex: true
         inputs: ["obj"]
-        inputsFromDependencies: ["staticlibrary"]
+        inputsFromDependencies: ["staticlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: SDCC.prepareArchiver.apply(SDCC, arguments)

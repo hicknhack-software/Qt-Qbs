@@ -352,7 +352,7 @@ function linkerFlags(project, product, inputs, outputs) {
     args.push(outputs.application[0].filePath);
 
     // Inputs.
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
 
     // Library paths.
     var libraryPathFlag = useCompilerDriver ? "-L" : "-k";
@@ -382,7 +382,7 @@ function linkerFlags(project, product, inputs, outputs) {
 function archiverFlags(project, product, inputs, outputs) {
     var args = ["-rc"];
     args.push(outputs.staticlibrary[0].filePath);
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
     return args;
 }
 

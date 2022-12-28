@@ -672,7 +672,7 @@ function linkerFlags(project, product, inputs, outputs) {
     var args = [];
 
     // Inputs.
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies));
 
     // Output.
     args.push("-o", outputs.application[0].filePath);
@@ -715,6 +715,7 @@ function archiverFlags(project, product, inputs, outputs) {
 
     // Inputs.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectExtraLinkerObjectPaths(product.cpp.extraLinkInputsFromDependencies, inputs));
 
     // Output.
     var architecture = product.qbs.architecture;

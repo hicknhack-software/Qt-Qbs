@@ -117,7 +117,7 @@ CppModule {
     Rule {
         id: assembler
         inputs: ["asm"]
-        outputFileTags: Cpp.assemblerOutputTags(generateAssemblerListingFiles)
+        outputFileTags: Cpp.assemblerOutputTags(generateAssemblerListingFiles).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.assemblerOutputArtifacts(input)
         prepare: IAR.prepareAssembler.apply(IAR, arguments)
     }
@@ -132,7 +132,7 @@ CppModule {
         inputs: ["cpp", "c"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles)
+        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.compilerOutputArtifacts(input)
         prepare: IAR.prepareCompiler.apply(IAR, arguments)
     }
@@ -141,7 +141,7 @@ CppModule {
         id: applicationLinker
         multiplex: true
         inputs: ["obj", "linkerscript"]
-        inputsFromDependencies: ["staticlibrary"]
+        inputsFromDependencies: ["staticlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
         prepare: IAR.prepareLinker.apply(IAR, arguments)
@@ -151,7 +151,7 @@ CppModule {
         id: staticLibraryLinker
         multiplex: true
         inputs: ["obj"]
-        inputsFromDependencies: ["staticlibrary"]
+        inputsFromDependencies: ["staticlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: IAR.prepareArchiver.apply(IAR, arguments)

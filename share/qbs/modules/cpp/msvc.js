@@ -429,7 +429,7 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
                            Cpp.collectMiscLinkerArguments(product));
     }
 
-    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs),
+    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies),
                               Cpp.collectResourceObjectPaths(inputs));
     args = args.concat([].uniqueConcat(allInputs).map(function(path) {
         return FileInfo.toWindowsSeparators(path);
@@ -736,16 +736,14 @@ function libtoolCommands(project, product, inputs, outputs, input, output, expli
 {
     var args = ['/nologo']
     var lib = outputs["staticlibrary"][0];
-    var nativeOutputFileName = FileInfo.toWindowsSeparators(lib.filePath)
-    args.push('/OUT:' + nativeOutputFileName)
-    for (var i in inputs.obj) {
-        var fileName = FileInfo.toWindowsSeparators(inputs.obj[i].filePath)
-        args.push(fileName)
-    }
-    for (var i in inputs.res) {
-        var fileName = FileInfo.toWindowsSeparators(inputs.res[i].filePath)
-        args.push(fileName)
-    }
+    args.push('/OUT:' + FileInfo.toWindowsSeparators(lib.filePath))
+
+    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies),
+                              Cpp.collectResourceObjectPaths(inputs));
+    args = args.concat([].uniqueConcat(allInputs).map(function(path) {
+        return FileInfo.toWindowsSeparators(path);
+    }));
+
     var cmd = new Command("lib.exe", args);
     cmd.description = 'creating ' + lib.fileName;
     cmd.highlight = 'linker';

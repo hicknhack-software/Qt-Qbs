@@ -450,7 +450,7 @@ function linkerFlags(project, product, inputs, outputs) {
         args = args.concat(Cpp.collectLibraryPaths(product).map(function(path) {
             return product.cpp.libraryPathFlag + FileInfo.toNativeSeparators(path);
         }));
-        args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+        args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies).map(function(path) {
             return FileInfo.toNativeSeparators(path);
         }));
 
@@ -477,7 +477,7 @@ function linkerFlags(project, product, inputs, outputs) {
 
 function libraryManagerFlags(project, product, inputs, outputs) {
     var args = ["-b", "-n", "-q"];
-    args = args.concat(Cpp.collectLinkerObjectPaths(inputs).map(function(path) {
+    args = args.concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies).map(function(path) {
         return "+" + FileInfo.toNativeSeparators(path);
     }));
     args.push("-o", FileInfo.toNativeSeparators(outputs.staticlibrary[0].filePath));
