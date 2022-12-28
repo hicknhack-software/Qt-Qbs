@@ -328,7 +328,7 @@ function assemblerFlags(project, product, input, outputs, explicitlyDependsOn) {
     return args;
 }
 
-function linkerFlags(project, product, inputs, outputs) {
+function linkerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     // Target MCU flag.
@@ -353,6 +353,7 @@ function linkerFlags(project, product, inputs, outputs) {
 
     // Inputs.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
 
     // Library paths.
     var libraryPathFlag = useCompilerDriver ? "-L" : "-k";
@@ -379,10 +380,11 @@ function linkerFlags(project, product, inputs, outputs) {
     return args;
 }
 
-function archiverFlags(project, product, inputs, outputs) {
+function archiverFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = ["-rc"];
     args.push(outputs.staticlibrary[0].filePath);
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
     return args;
 }
 
@@ -536,9 +538,9 @@ function prepareAssembler(project, product, inputs, outputs, input, output, expl
     return cmds;
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var cmds = [];
-    var args = linkerFlags(project, product, inputs, outputs);
+    var args = linkerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var linkerPath = effectiveLinkerPath(product);
     var cmd = new Command(linkerPath, args);
     cmd.description = "linking " + outputs.application[0].fileName;
@@ -561,8 +563,8 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     return cmds;
 }
 
-function prepareArchiver(project, product, inputs, outputs, input, output) {
-    var args = archiverFlags(project, product, inputs, outputs);
+function prepareArchiver(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
+    var args = archiverFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var archiverPath = product.cpp.archiverPath;
     var cmd = new Command(archiverPath, args);
     cmd.description = "creating " + output.fileName;
