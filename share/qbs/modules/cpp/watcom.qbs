@@ -166,6 +166,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "res", "linkerscript"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
         prepare: WATCOM.prepareLinker.apply(WATCOM, arguments)
@@ -177,6 +178,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "res"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.dynamicLibraryLinkerOutputTags();
         outputArtifacts: Cpp.dynamicLibraryLinkerOutputArtifacts(product)
         prepare: WATCOM.prepareLinker.apply(WATCOM, arguments)
@@ -187,6 +189,7 @@ CppModule {
         multiplex: true
         inputs: ["obj"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: WATCOM.prepareLibraryManager.apply(WATCOM, arguments)
