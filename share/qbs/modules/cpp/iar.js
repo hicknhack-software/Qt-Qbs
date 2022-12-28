@@ -668,11 +668,12 @@ function assemblerFlags(project, product, input, outputs, explicitlyDependsOn) {
     return args;
 }
 
-function linkerFlags(project, product, inputs, outputs) {
+function linkerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     // Inputs.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
 
     // Output.
     args.push("-o", outputs.application[0].filePath);
@@ -710,11 +711,12 @@ function linkerFlags(project, product, inputs, outputs) {
     return args;
 }
 
-function archiverFlags(project, product, inputs, outputs) {
+function archiverFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     // Inputs.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
 
     // Output.
     var architecture = product.qbs.architecture;
@@ -745,9 +747,9 @@ function prepareAssembler(project, product, inputs, outputs, input, output, expl
     return [cmd];
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var primaryOutput = outputs.application[0];
-    var args = linkerFlags(project, product, inputs, outputs);
+    var args = linkerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var linkerPath = product.cpp.linkerPath;
     var cmd = new Command(linkerPath, args);
     cmd.description = "linking " + primaryOutput.fileName;
@@ -756,8 +758,8 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     return [cmd];
 }
 
-function prepareArchiver(project, product, inputs, outputs, input, output) {
-    var args = archiverFlags(project, product, inputs, outputs);
+function prepareArchiver(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
+    var args = archiverFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var archiverPath = product.cpp.archiverPath;
     var cmd = new Command(archiverPath, args);
     cmd.description = "creating " + output.fileName;
