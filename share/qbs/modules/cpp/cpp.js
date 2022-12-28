@@ -113,17 +113,17 @@ function resourceCompilerOutputTags() {
     return ["res"];
 }
 
-function precompiledHeaderOutputTags(lang, generateObjects) {
+function precompiledHeaderOutputTags(lang, generateObjects, product) {
     var tags = [lang + "_pch"];
     if (generateObjects)
-        tags.push("obj");
+        tags = tags.concat(["obj"], product.cpp.extraObjTags);
     return tags;
 };
 
 function assemblerOutputArtifacts(input) {
     var artifacts = [];
     artifacts.push({
-        fileTags: ["obj"],
+        fileTags: ["obj"].concat(input.cpp.extraObjTags),
         filePath: FileInfo.joinPaths(Utilities.getHash(input.baseDir),
                                      input.fileName + input.cpp.objectSuffix)
     });
@@ -189,7 +189,7 @@ function cxxModulesArtifacts(input) {
 function compilerOutputArtifacts(input, inputs, withCxxModules) {
     var objTags = input.fileTags.includes("cpp_intermediate_object")
         ? ["intermediate_obj"]
-        : ["obj"];
+        : ["obj"].concat(input.cpp.extraObjTags);
     if (inputs) {
         if (inputs.c || inputs.objc)
             objTags.push("c_obj");
@@ -265,7 +265,7 @@ function precompiledHeaderOutputArtifacts(input, product, lang, generateObjects)
     }];
     if (generateObjects) {
         artifacts.push({
-            fileTags: ["obj"],
+            fileTags: ["obj"].concat(input.cpp.extraObjTags),
             filePath: Utilities.getHash(input.completeBaseName)
                         + "_" + lang + input.cpp.objectSuffix
         });
@@ -424,8 +424,11 @@ function collectLinkerScriptPaths(inputs) {
             : [];
 }
 
-function collectLinkerObjectPaths(inputs) {
-    return inputs.obj ? inputs.obj.map(function(obj) { return obj.filePath; }) : [];
+function collectLinkerObjectPaths(inputs, extraTags) {
+    return (inputs.obj ? inputs.obj.map(function(obj) { return obj.filePath; }) : []).concat(
+        extraTags.map(function(tag) {
+            return inputs[tag] ? inputs[tag].map(function(obj) { return obj.filePath; }) : [];
+        }).flat());
 }
 
 function collectResourceObjectPaths(inputs) {
