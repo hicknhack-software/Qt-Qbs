@@ -170,6 +170,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "res", "linkerscript"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
         prepare: DMC.prepareLinker.apply(DMC, arguments)
@@ -180,6 +181,7 @@ CppModule {
         multiplex: true
         inputs: ["obj", "res"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.dynamicLibraryLinkerOutputTags()
         outputArtifacts: Cpp.dynamicLibraryLinkerOutputArtifacts(product)
         prepare: DMC.prepareLinker.apply(DMC, arguments)
@@ -190,6 +192,7 @@ CppModule {
         multiplex: true
         inputs: ["obj"]
         inputsFromDependencies: ["staticlibrary", "dynamiclibrary_import"]
+        explicitlyDependsOnFromDependencies: ["obj"]
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: DMC.prepareArchiver.apply(DMC, arguments)

@@ -414,6 +414,7 @@ CppModule {
                 return tags;
             }
             inputsFromDependencies: ["dynamiclibrary_symbols", "staticlibrary", "dynamiclibrary_import"]
+            explicitlyDependsOnFromDependencies: ["obj"]
             outputFileTags: {
                 var tags = ["bundle.input", "dynamiclibrary", "dynamiclibrary_symlink",
                             "dynamiclibrary_symbols", "debuginfo_dll", "debuginfo_bundle",
@@ -430,6 +431,7 @@ CppModule {
             multiplex: true
             inputs: ["obj", "res", "linkerscript"]
             inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import", "staticlibrary"]
+            explicitlyDependsOnFromDependencies: ["obj"]
             outputFileTags: ["bundle.input", "staticlibrary", "c_staticlibrary", "cpp_staticlibrary"]
             outputArtifacts: Gcc.staticLibLinkerOutputArtifacts(product, inputs)
             prepare: Gcc.staticLibLinkerCommands.apply(Gcc, arguments)
@@ -446,6 +448,7 @@ CppModule {
                 return tags;
             }
             inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import", "staticlibrary"]
+            explicitlyDependsOnFromDependencies: ["obj"]
             outputFileTags: {
                 var tags = ["bundle.input", "loadablemodule", "debuginfo_loadablemodule",
                             "debuginfo_bundle", "debuginfo_plist"];
@@ -468,6 +471,7 @@ CppModule {
                 return tags;
             }
             inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import", "staticlibrary"]
+            explicitlyDependsOnFromDependencies: ["obj"]
             outputFileTags: {
                 var tags = ["bundle.input", "application", "debuginfo_app", "debuginfo_bundle",
                             "debuginfo_plist"];
