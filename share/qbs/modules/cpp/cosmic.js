@@ -278,7 +278,7 @@ function assemblerFlags(project, product, input, outputs, explicitlyDependsOn) {
     return args;
 }
 
-function linkerFlags(project, product, inputs, outputs) {
+function linkerFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = [];
 
     // Library paths.
@@ -306,6 +306,7 @@ function linkerFlags(project, product, inputs, outputs) {
 
     // Input objects.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
 
     // Library dependencies (order has matters).
     args = args.concat(Cpp.collectLibraryDependencies(product).map(function(dep) {
@@ -318,7 +319,7 @@ function linkerFlags(project, product, inputs, outputs) {
     return args;
 }
 
-function archiverFlags(project, product, inputs, outputs) {
+function archiverFlags(project, product, inputs, outputs, explicitlyDependsOn) {
     var args = ["-cl"];
 
     // Output.
@@ -326,6 +327,7 @@ function archiverFlags(project, product, inputs, outputs) {
 
     // Input objects.
     args = args.concat(Cpp.collectLinkerObjectPaths(inputs));
+    args = args.concat(Cpp.collectLinkerObjectPaths(explicitlyDependsOn));
     return args;
 }
 
@@ -421,9 +423,9 @@ function prepareAssembler(project, product, inputs, outputs, input, output, expl
     return cmds;
 }
 
-function prepareLinker(project, product, inputs, outputs, input, output) {
+function prepareLinker(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
     var primaryOutput = outputs.application[0];
-    var args = linkerFlags(project, product, inputs, outputs);
+    var args = linkerFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var cmd = new Command(product.cpp.linkerPath, args);
     cmd.workingDirectory = product.buildDirectory;
     cmd.description = "linking " + primaryOutput.fileName;
@@ -432,8 +434,8 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
     return [cmd];
 }
 
-function prepareArchiver(project, product, inputs, outputs, input, output) {
-    var args = archiverFlags(project, product, inputs, outputs);
+function prepareArchiver(project, product, inputs, outputs, input, output, explicitlyDependsOn) {
+    var args = archiverFlags(project, product, inputs, outputs, explicitlyDependsOn);
     var cmd = new Command(product.cpp.archiverPath, args);
     cmd.workingDirectory = product.buildDirectory;
     cmd.description = "creating " + output.fileName;
