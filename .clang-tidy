@@ -2,6 +2,7 @@
 Checks: >
     -*,
     bugprone-*,
+    -bugprone-suspicious-include,
     -bugprone-narrowing-conversions,
     cppcoreguidelines-interfaces-global-init,
     cppcoreguidelines-pro-type-cstyle-cast,
@@ -60,6 +61,7 @@ Checks: >
 
 WarningsAsErrors: >
     bugprone-*,
+    -bugprone-suspicious-include,
     cppcoreguidelines-*,
     google-*,
     misc-unused-*,
@@ -72,4 +74,3 @@ HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
 CheckOptions:
 ...
-
