@@ -19,7 +19,7 @@ Product {
                     "QT_WARN_DEPRECATED_UP_TO=0x060700"
                 ];
         if (qbs.toolchain.contains("msvc"))
-            res.push("_SCL_SECURE_NO_WARNINGS");
+            res.push("_SCL_SECURE_NO_WARNINGS", "_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR");
         if (qbs.enableDebugCode)
             res.push("QT_STRICT_ITERATORS");
         return res;
