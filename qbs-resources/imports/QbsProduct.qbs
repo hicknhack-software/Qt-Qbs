@@ -13,7 +13,7 @@ Product {
                     "QT_NO_PROCESS_COMBINED_ARGUMENT_START"
                 ];
         if (qbs.toolchain.contains("msvc"))
-            res.push("_SCL_SECURE_NO_WARNINGS");
+            res.push("_SCL_SECURE_NO_WARNINGS", "_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR");
         if (qbs.enableDebugCode)
             res.push("QT_STRICT_ITERATORS");
         return res;
