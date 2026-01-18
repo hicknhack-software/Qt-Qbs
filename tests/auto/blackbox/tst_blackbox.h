@@ -49,6 +49,8 @@ private slots:
     void artifactsMapChangeTracking();
     void artifactsMapInvalidation();
     void artifactsMapRaceCondition();
+    void onlineSource();
+
     void artifactScanning();
     void assembly();
     void autotestWithDependencies();

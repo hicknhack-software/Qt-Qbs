@@ -477,6 +477,8 @@ void TestBlackboxProviders::qbspkgconfigModuleProvider()
     QCOMPARE(runQbs(params), 0);
 }
 
+
+
 void TestBlackboxProviders::qtBug51237()
 {
     const SettingsPtr s = settings();

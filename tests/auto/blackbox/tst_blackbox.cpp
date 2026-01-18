@@ -645,6 +645,24 @@ void TestBlackbox::artifactsMapRaceCondition()
     QCOMPARE(runQbs(), 0);
 }
 
+void TestBlackbox::onlineSource()
+{
+    QDir::setCurrent(testDataDir + "/onlinesource");
+    rmDirR(relativeBuildDir());
+
+    QbsRunParameters params("resolve");
+    QCOMPARE(runQbs(params), 0);
+
+    // Check that the CMake-style module was set up correctly
+    QVERIFY2(m_qbsStdout.contains("OnlineSource: Setting up module 'testmodule'"), m_qbsStdout.constData());
+    QVERIFY2(m_qbsStdout.contains("testmodule.sourceDirectory:"), m_qbsStdout.constData());
+    QVERIFY2(m_qbsStdout.contains("testmodule.cpp.includePaths:"), m_qbsStdout.constData());
+
+    // Check that the Qbs project was detected via OnlineSubProject
+    QVERIFY2(m_qbsStdout.contains("OnlineSource: Setting up module 'qbspackage'"), m_qbsStdout.constData());
+    QVERIFY2(m_qbsStdout.contains("OnlineSource: Detected Qbs project:"), m_qbsStdout.constData());
+}
+
 void TestBlackbox::artifactScanning()
 {
     const QString projectDir = testDataDir + "/artifact-scanning";
