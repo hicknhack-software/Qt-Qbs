@@ -103,6 +103,12 @@ function hasCxx20Option(input)
         || Utilities.versionCompare(input.cpp.compilerVersion, "19.29.30133.0") >= 0;
 }
 
+function hasCxx23Option(input)
+{
+    return (input.qbs.toolchain.includes("clang-cl") && input.cpp.compilerVersionMajor >= 20)
+        || Utilities.versionCompare(input.cpp.compilerVersion, "19.43.0.0") >= 0;
+}
+
 function hasCVerOption(input)
 {
     return (input.qbs.toolchain.includes("clang-cl") && input.cpp.compilerVersionMajor >= 13)
@@ -124,6 +130,8 @@ function addCxxLanguageVersionFlag(input, args) {
             ["c++26", "c++23", "c++20", "c++17", "c++14", "c++11", "c++98"], "C++");
     if (!cxxVersion)
         return;
+    if (cxxVersion === "c++11" || cxxVersion === "c++98")
+        return; // /std option starts with C++14
 
     // Visual C++ 2013, Update 3 or clang-cl
     var hasStdOption = input.qbs.toolchain.includes("clang-cl")
@@ -138,7 +146,9 @@ function addCxxLanguageVersionFlag(input, args) {
         flag = "/std:c++17";
     else if (cxxVersion === "c++20" && hasCxx20Option(input))
         flag = "/std:c++20";
-    else if (cxxVersion !== "c++11" && cxxVersion !== "c++98")
+    else if (cxxVersion === "c++23" && hasCxx23Option(input))
+        flag = "/std:c++23preview";
+    else
         flag = "/std:c++latest";
     if (flag)
         args.push(flag);
