@@ -12,6 +12,7 @@ Library {
 
     Group {
         name: "Public Headers"
+        condition: publicHeaders && publicHeaders.length > 0
         files: publicHeaders
         fileTags: ["bundle.input.public_hpp", "hpp"]
         prefix: product.sourceDirectory + "/"
@@ -21,6 +22,7 @@ Library {
 
     Group {
         name: "Private Headers"
+        condition: privateHeaders && privateHeaders.length > 0
         files: privateHeaders
         fileTags: ["bundle.input.private_hpp", "hpp"]
         prefix: product.sourceDirectory + "/"
