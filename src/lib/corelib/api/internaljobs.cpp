@@ -468,3 +468,5 @@ void InternalInstallJob::start()
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_internaljobs.cpp"
