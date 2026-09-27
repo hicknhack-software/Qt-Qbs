@@ -133,7 +133,7 @@ CppModule {
     Rule {
         id: assembler
         inputs: ["asm"]
-        outputFileTags: Cpp.assemblerOutputTags(generateAssemblerListingFiles)
+        outputFileTags: Cpp.assemblerOutputTags(generateAssemblerListingFiles).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.assemblerOutputArtifacts(input)
         prepare: WATCOM.prepareAssembler.apply(WATCOM, arguments)
     }
@@ -148,7 +148,7 @@ CppModule {
         inputs: ["cpp", "c"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles)
+        outputFileTags: Cpp.compilerOutputTags(generateCompilerListingFiles).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.compilerOutputArtifacts(input)
         prepare: WATCOM.prepareCompiler.apply(WATCOM, arguments)
     }
@@ -172,7 +172,7 @@ CppModule {
         id: applicationLinker
         multiplex: true
         inputs: ["obj", "res", "linkerscript"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.applicationLinkerOutputTags(generateLinkerMapFile,
                                                         shouldSignArtifacts)
         outputArtifacts: Cpp.applicationLinkerOutputArtifacts(product)
@@ -184,7 +184,7 @@ CppModule {
         condition: qbs.targetOS.includes("windows")
         multiplex: true
         inputs: ["obj", "res"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.dynamicLibraryLinkerOutputTags(shouldSignArtifacts)
         outputArtifacts: Cpp.dynamicLibraryLinkerOutputArtifacts(product)
         prepare: WATCOM.prepareLinker.apply(WATCOM, arguments)
@@ -194,7 +194,7 @@ CppModule {
         id: libraryManager
         multiplex: true
         inputs: ["obj"]
-        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"]
+        inputsFromDependencies: ["staticlibrary", "objectlibrary", "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
         outputFileTags: Cpp.staticLibraryLinkerOutputTags()
         outputArtifacts: Cpp.staticLibraryLinkerOutputArtifacts(product)
         prepare: WATCOM.prepareLibraryManager.apply(WATCOM, arguments)
