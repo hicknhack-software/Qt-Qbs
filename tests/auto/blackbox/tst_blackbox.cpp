@@ -3699,6 +3699,12 @@ void TestBlackbox::setupRunEnvironment()
              m_qbsStdout.constData());
 }
 
+void TestBlackbox::exportedObjectProduct()
+{
+    QDir::setCurrent(testDataDir + "/exported-object-product");
+    QCOMPARE(runQbs(), 0);
+}
+
 void TestBlackbox::staticLibDeps()
 {
     QFETCH(bool, withExport);
