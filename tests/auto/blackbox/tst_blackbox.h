@@ -346,6 +346,7 @@ private slots:
     void setupRunEnvironment();
     void staticLibDeps();
     void staticLibDeps_data();
+    void exportedObjectProduct();
     void objectLibDeps();
     void objectLibDeps_data();
     void rpathLink();

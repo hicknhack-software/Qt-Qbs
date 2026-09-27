@@ -3729,6 +3729,12 @@ void TestBlackbox::staticLibDeps_data()
     QTest::newRow("with Export, no import") << true << false << true;
 }
 
+void TestBlackbox::exportedObjectProduct()
+{
+    QDir::setCurrent(testDataDir + "/exported-object-product");
+    QCOMPARE(runQbs(), 0);
+}
+
 void TestBlackbox::objectLibDeps()
 {
     QFETCH(bool, withExport);
