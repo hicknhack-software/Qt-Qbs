@@ -258,7 +258,7 @@ function compute_url(){
         fi
 
         SHORT_VERSION=${VERSION%??}
-        BASE_URL="${MIRROR}/official_releases/qtcreator"
+        BASE_URL="https://download.qt.io/archive/qtcreator"
         REMOTE_PATH="${SHORT_VERSION}/${VERSION}/installer_source/${HOST_OS}/qtcreator.7z"
         echo "${BASE_URL}/${REMOTE_PATH}"
         return 0
