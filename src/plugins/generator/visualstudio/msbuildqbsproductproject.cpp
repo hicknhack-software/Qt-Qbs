@@ -171,6 +171,20 @@ void MSBuildQbsProductProject::addConfiguration(const GeneratableProject &projec
     propertyGroup1->appendProperty(QStringLiteral("LocalDebuggerWorkingDirectory"),
                                    QStringLiteral("$(OutDir)"));
 
+    const auto cppLanguageVersion = properties.getModuleProperty(QStringLiteral("cpp"), QStringLiteral("cxxLanguageVersion")).toString().trimmed();
+    if (cppLanguageVersion.contains(QLatin1String("c++17"))) {
+        propertyGroup1->appendProperty(QStringLiteral("AdditionalOptions"),
+                                       QStringLiteral("/std:c++17 /permissive- /await"));
+    }
+    else if (cppLanguageVersion.contains(QLatin1String("c++20")) || cppLanguageVersion.contains(QLatin1String("c++2a"))) {
+        propertyGroup1->appendProperty(QStringLiteral("AdditionalOptions"),
+                                       QStringLiteral("/std:c++20 /permissive-"));
+    }
+    else if (cppLanguageVersion.contains(QLatin1String("c++23")) || cppLanguageVersion.contains(QLatin1String("c++2b"))) {
+        propertyGroup1->appendProperty(QStringLiteral("AdditionalOptions"),
+                                       QStringLiteral("/std:c++latest /permissive-"));
+    }
+
     auto env = buildTask.getRunEnvironment(productData, project.installOptions,
                                            QProcessEnvironment(), QStringList(), nullptr)
             .runEnvironment();
