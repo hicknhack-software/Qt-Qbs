@@ -2,6 +2,7 @@
 Checks: >
     -*,
     bugprone-*,
+    -bugprone-suspicious-include,
     -bugprone-easily-swappable-parameters,
     -bugprone-narrowing-conversions,
     -bugprone-throw-keyword-missing,
@@ -61,6 +62,7 @@ Checks: >
 
 WarningsAsErrors: >
     bugprone-*,
+    -bugprone-suspicious-include,
     cppcoreguidelines-*,
     google-*,
     misc-unused-*,
