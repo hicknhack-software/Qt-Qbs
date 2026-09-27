@@ -45,3 +45,5 @@ QUuid VisualStudioSolutionFolderProject::projectTypeGuid() const
 }
 
 } // namespace qbs
+
+#include "moc_visualstudiosolutionfolderproject.cpp"
