@@ -124,6 +124,8 @@ function addCxxLanguageVersionFlag(input, args) {
             ["c++26", "c++23", "c++20", "c++17", "c++14", "c++11", "c++98"], "C++");
     if (!cxxVersion)
         return;
+    if (cxxVersion === "c++11" || cxxVersion === "c++98")
+        return; // /std option starts with C++14
 
     // Visual C++ 2013, Update 3 or clang-cl
     var hasStdOption = input.qbs.toolchain.includes("clang-cl")
@@ -136,9 +138,9 @@ function addCxxLanguageVersionFlag(input, args) {
         flag = "/std:c++14";
     else if (cxxVersion === "c++17" && hasCxx17Option(input))
         flag = "/std:c++17";
-    else if (cxxVersion === "c++20" && hasCxx20Option(input))
+    else if ((cxxVersion === "c++20" || cxxVersion === "c++2a") && hasCxx20Option(input))
         flag = "/std:c++20";
-    else if (cxxVersion !== "c++11" && cxxVersion !== "c++98")
+    else
         flag = "/std:c++latest";
     if (flag)
         args.push(flag);
@@ -418,7 +420,7 @@ function prepareLinker(project, product, inputs, outputs, input, output) {
                            Cpp.collectMiscLinkerArguments(product));
     }
 
-    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs),
+    var allInputs = [].concat(Cpp.collectLinkerObjectPaths(inputs, product.cpp.extraLinkInputsFromDependencies),
                               Cpp.collectResourceObjectPaths(inputs));
     args = args.concat([].uniqueConcat(allInputs).map(function(path) {
         return FileInfo.toWindowsSeparators(path);
@@ -728,8 +730,10 @@ function libtoolCommands(project, product, inputs, outputs, input, output, expli
     var nativeOutputFileName = FileInfo.toWindowsSeparators(lib.filePath)
     args.push('/OUT:' + nativeOutputFileName)
     Array.prototype.push.apply(args, product.cpp.archiverFlags);
-    for (var i in inputs.obj) {
-        var fileName = FileInfo.toWindowsSeparators(inputs.obj[i].filePath)
+    var objPaths = Cpp.collectLinkerObjectPaths(inputs,
+                                                product.cpp.extraLinkInputsFromDependencies, true);
+    for (var i in objPaths) {
+        var fileName = FileInfo.toWindowsSeparators(objPaths[i])
         args.push(fileName)
     }
     for (var i in inputs.res) {
