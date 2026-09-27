@@ -444,7 +444,7 @@ CppModule {
                 return tags;
             }
             inputsFromDependencies: ["dynamiclibrary_symbols", "staticlibrary", "objectlibrary",
-                "dynamiclibrary_import"]
+                "dynamiclibrary_import"].concat(product.cpp.extraLinkInputsFromDependencies)
             outputFileTags: {
                 var tags = ["bundle.input", "dynamiclibrary", "dynamiclibrary_symlink",
                             "dynamiclibrary_symbols", "debuginfo_dll", "debuginfo_bundle",
@@ -463,7 +463,7 @@ CppModule {
             multiplex: true
             inputs: ["obj", "res", "linkerscript"]
             inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import",
-                "staticlibrary", "objectlibrary"]
+                "staticlibrary", "objectlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
             outputFileTags: {
                 var tags = ["bundle.input", "bundle.main.input", "bundle.main.library",
                              "staticlibrary", "c_staticlibrary", "cpp_staticlibrary"]
@@ -486,7 +486,7 @@ CppModule {
                 return tags;
             }
             inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import",
-                "staticlibrary", "objectlibrary"]
+                "staticlibrary", "objectlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
             outputFileTags: {
                 var tags = ["bundle.input", "loadablemodule",
                             "debuginfo_loadablemodule", "debuginfo_bundle", "debuginfo_plist"];
@@ -511,7 +511,7 @@ CppModule {
                 return tags;
             }
             inputsFromDependencies: ["dynamiclibrary_symbols", "dynamiclibrary_import",
-                "staticlibrary", "objectlibrary"]
+                "staticlibrary", "objectlibrary"].concat(product.cpp.extraLinkInputsFromDependencies)
             outputFileTags: {
                 var tags = ["bundle.input", "application",
                             "debuginfo_app", "debuginfo_bundle", "debuginfo_plist"];
@@ -537,7 +537,7 @@ CppModule {
         auxiliaryInputsFromDependencies: ["hpp"]
         explicitlyDependsOn: ["c_pch", "cpp_pch", "objc_pch", "objcpp_pch"]
         outputFileTags: Cpp.compilerOutputTags(/*withListingFiles*/ false, /*withCxxModules*/ true)
-            .concat(["c_obj", "cpp_obj"])
+            .concat(["c_obj", "cpp_obj"]).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.compilerOutputArtifacts(input, inputs, /*withCxxModules*/ true)
         prepare: Gcc.prepareCompiler.apply(Gcc, arguments)
     }
@@ -545,7 +545,7 @@ CppModule {
     Rule {
         name: "assembler"
         inputs: ["asm"]
-        outputFileTags: Cpp.assemblerOutputTags(false)
+        outputFileTags: Cpp.assemblerOutputTags(false).concat(product.cpp.extraObjTags)
         outputArtifacts: Cpp.assemblerOutputArtifacts(input)
         prepare: Gcc.prepareAssembler.apply(Gcc, arguments)
     }
@@ -555,7 +555,7 @@ CppModule {
         inputs: ["c_pch_src"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.precompiledHeaderOutputTags("c", false)
+        outputFileTags: Cpp.precompiledHeaderOutputTags("c", false, product)
         outputArtifacts: Cpp.precompiledHeaderOutputArtifacts(input, product, "c", false)
         prepare: Gcc.prepareCompiler.apply(Gcc, arguments)
     }
@@ -565,7 +565,7 @@ CppModule {
         inputs: ["cpp_pch_src"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.precompiledHeaderOutputTags("cpp", false)
+        outputFileTags: Cpp.precompiledHeaderOutputTags("cpp", false, product)
         outputArtifacts: Cpp.precompiledHeaderOutputArtifacts(input, product, "cpp", false)
         prepare: Gcc.prepareCompiler.apply(Gcc, arguments)
     }
@@ -575,7 +575,7 @@ CppModule {
         inputs: ["objc_pch_src"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.precompiledHeaderOutputTags("objc", false)
+        outputFileTags: Cpp.precompiledHeaderOutputTags("objc", false, product)
         outputArtifacts: Cpp.precompiledHeaderOutputArtifacts(input, product, "objc", false)
         prepare: Gcc.prepareCompiler.apply(Gcc, arguments)
     }
@@ -585,7 +585,7 @@ CppModule {
         inputs: ["objcpp_pch_src"]
         auxiliaryInputs: ["hpp"]
         auxiliaryInputsFromDependencies: ["hpp"]
-        outputFileTags: Cpp.precompiledHeaderOutputTags("objcpp", false)
+        outputFileTags: Cpp.precompiledHeaderOutputTags("objcpp", false, product)
         outputArtifacts: Cpp.precompiledHeaderOutputArtifacts(input, product, "objcpp", false)
         prepare: Gcc.prepareCompiler.apply(Gcc, arguments)
     }
