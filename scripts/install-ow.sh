@@ -115,7 +115,8 @@ DOWNLOAD_DIR=`mktemp -d 2>/dev/null || mktemp -d -t 'ow-tmp'`
 VERSION_MAJOR=`echo $VERSION | cut -d. -f1`
 VERSION_MINOR=`echo $VERSION | cut -d. -f2`
 
-OW_URL="https://github.com/open-watcom/open-watcom-v${VERSION_MAJOR}/releases/download/Current-build/ow-snapshot.tar.xz"
+OW_RELEASE_TAG=${OW_RELEASE_TAG:-Current-build}
+OW_URL="https://github.com/open-watcom/open-watcom-v${VERSION_MAJOR}/releases/download/${OW_RELEASE_TAG}/ow-snapshot.tar.xz"
 OW_TAR="${DOWNLOAD_DIR}/ow.tar.xz"
 
 echo "Downloading compiler from ${OW_URL}..." >&2
