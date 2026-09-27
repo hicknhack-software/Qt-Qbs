@@ -302,3 +302,5 @@ StdinReader::StdinReader(QObject *parent) : QObject(parent) { }
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_stdinreader.cpp"

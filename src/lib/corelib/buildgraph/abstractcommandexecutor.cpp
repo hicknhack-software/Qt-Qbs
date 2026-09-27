@@ -104,3 +104,5 @@ void AbstractCommandExecutor::startTimeout()
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_abstractcommandexecutor.cpp"

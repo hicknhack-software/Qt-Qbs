@@ -179,3 +179,5 @@ void LauncherInterface::handleProcessStderr()
 
 } // namespace Internal
 } // namespace qbs
+
+#include "moc_launcherinterface.cpp"
