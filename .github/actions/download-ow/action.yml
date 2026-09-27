@@ -10,6 +10,8 @@ runs:
   steps:
     - name: Install OpenWatcom
       run: |
+        # The September 2026 and Current-build disassemblers crash on 16-bit objects.
+        export OW_RELEASE_TAG=2026-08-01-Build
         OW_DIR=$(./scripts/install-ow.sh -d $HOME/watcom --version ${{ inputs.version }})
         (cygpath -w ${OW_DIR} 2>/dev/null || echo ${OW_DIR}) >> ${GITHUB_PATH}
       shell: bash

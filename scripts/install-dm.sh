@@ -93,10 +93,10 @@ fi
 
 DOWNLOAD_DIR=`mktemp -d 2>/dev/null || mktemp -d -t 'dm-tmp'`
 
-DM_URL="http://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm${VERSION//./}c.zip"
-UTILS_URL="http://ftp.digitalmars.com/bup.zip"
-DOS_LIBS_URL="http://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm850dos.zip"
-DOSX_LIBS_URL="http://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm831x.zip"
+DM_URL="https://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm${VERSION//./}c.zip"
+UTILS_URL="https://ftp.digitalmars.com/bup.zip"
+DOS_LIBS_URL="https://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm850dos.zip"
+DOSX_LIBS_URL="https://ftp.digitalmars.com/Digital_Mars_C++/Patch/dm831x.zip"
 
 DM_ZIP="${DOWNLOAD_DIR}/dm.zip"
 UTILS_ZIP="${DOWNLOAD_DIR}/utils.zip"
