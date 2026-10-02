@@ -64,10 +64,13 @@ install(
 
 set(_QMLTYPES_INSTALL_PATH "${PROJECT_BINARY_DIR}/resources-build/install-root/share/qbs/qml-type-descriptions/qbs.qmltypes")
 get_update_path_command(UPDATE_PATH_COMMAND)
-get_target_property(_QBS_OUTPUT_DIR qbs RUNTIME_OUTPUT_DIRECTORY)
 add_custom_command(
     OUTPUT "${_QMLTYPES_INSTALL_PATH}"
-    COMMAND ${CMAKE_COMMAND} -E env "${UPDATE_PATH_COMMAND}" ${_QBS_OUTPUT_DIR}/qbs
+    COMMAND ${CMAKE_COMMAND} -E env "${UPDATE_PATH_COMMAND}" $<TARGET_FILE:qbs>
+        config
+        --settings-dir ${PROJECT_BINARY_DIR}/settings
+        preferences.qbsSearchPaths ${PROJECT_BINARY_DIR}/share/qbs
+    COMMAND ${CMAKE_COMMAND} -E env "${UPDATE_PATH_COMMAND}" $<TARGET_FILE:qbs>
         resolve
         --settings-dir ${PROJECT_BINARY_DIR}/settings
         -f ${PROJECT_SOURCE_DIR}/qbs.qbs
@@ -77,7 +80,7 @@ add_custom_command(
         project.withCode:false
         project.withDocumentation:false
         profile:none
-    COMMAND ${CMAKE_COMMAND} -E env "${UPDATE_PATH_COMMAND}" ${_QBS_OUTPUT_DIR}/qbs
+    COMMAND ${CMAKE_COMMAND} -E env "${UPDATE_PATH_COMMAND}" $<TARGET_FILE:qbs>
         build
         --settings-dir ${PROJECT_BINARY_DIR}/settings
         -f ${PROJECT_SOURCE_DIR}/qbs.qbs
